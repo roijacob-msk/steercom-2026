@@ -30,7 +30,12 @@ library(stringr)
     left_join(sherlock_run_november, by = "customer_id")      
 }
 
-sherlock_customers <- c(
-  sherlock_experimental_customers$customer_id,
-  sherlock_xmas_customers$customer_id
+sherlock_customers <- bind_rows(
+  sherlock_experimental_customers |> 
+    select(customer_id, sherlock_segment) |>
+    mutate(source = "permanent_experimental"),
+  
+  sherlock_xmas_customers |> 
+    select(customer_id, sherlock_segment) |>
+    mutate(source = "seasonal_xmas")
 )
