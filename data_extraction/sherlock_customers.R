@@ -49,9 +49,9 @@ library(stringr)
 sherlock_customers <- bind_rows(
   sherlock_experimental_customers |>
     select(customer_id, sherlock_segment) |>
-    mutate(source = "permanent_experimental"),
+    mutate(increase_type = "Permanent Experimental"),
 
   sherlock_xmas_customers |>
     select(customer_id, sherlock_segment) |>
-    mutate(source = "seasonal_xmas")
+    mutate(increase_type = "Seasonal Xmas")
 )
