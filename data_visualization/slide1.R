@@ -35,7 +35,11 @@ add_pct_increase <- geom_label(
 
 add_dec_customer_base <- geom_label(
   data = monthly_gmv_per_type |> filter(year_month == "2025-12"),
-  aes(x = 1.5, y = 0, label = paste0(customers, " Dec. Customers")),
+  aes(
+    x = 1.5,
+    y = 0,
+    label = paste0(scales::comma(customers), " Dec. Customers")
+  ),
   inherit.aes = FALSE,
   color = "darkgreen"
 )
