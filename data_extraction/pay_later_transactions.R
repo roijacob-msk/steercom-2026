@@ -1,5 +1,10 @@
 library(DBI)
+library(dplyr)
+library(tidyr)
 
+source("data_extraction/sherlock_customers.R")
+
+# Extraction ----
 redshift <- dbConnect(
   RPostgres::Postgres(),
   host = Sys.getenv("REDSHIFT_HOST"),
@@ -21,4 +26,18 @@ query <- "
     AND year = 2025
 "
 
-pay_later_txns <- dbGetQuery(redshift, query)
+# Processing ----
+pay_later_txns <- dbGetQuery(redshift, query) |>
+  mutate(
+    is_sherlock = if_else(
+      customer_id %in% sherlock_customers$customer_id,
+      "Sherlock",
+      "Non-Sherlock"
+    ),
+    year_month = strftime(activated_at, "%Y-%m")
+  ) |>
+  left_join(sherlock_customers, by = join_by(customer_id)) |>
+  mutate(increase_type = replace_na(increase_type, "Non-Sherlock"))
+
+pay_later_txns_sherlock <- pay_later_txns |>
+  filter(is_sherlock == "Sherlock")
