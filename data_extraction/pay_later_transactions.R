@@ -23,7 +23,7 @@ query <- "
     , handling_fee
   FROM ksk_pay_later_transactions
   WHERE vendor_id = '5ed13854c703830b3df5502a'
-    AND year = 2025
+    AND year >= 2024
 "
 
 # Processing ----
